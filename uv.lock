@@ -950,11 +950,12 @@ wheels = [
 ]
 
 [[package]]
-name = "midterm"
+name = "midterm-streamlit"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "cohere" },
+    { name = "httpx" },
     { name = "langchain" },
     { name = "langchain-community" },
     { name = "langchain-core" },
@@ -975,6 +976,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "cohere", specifier = ">=5.13.11" },
+    { name = "httpx", specifier = ">=0.27.2" },
     { name = "langchain", specifier = "==0.3.15" },
     { name = "langchain-community", specifier = "==0.3.15" },
     { name = "langchain-core", specifier = "==0.3.31" },
