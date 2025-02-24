@@ -36,7 +36,6 @@ def main():
     # if not validate_api_key(api_key):
     #     st.stop()
     
-    #print("API KEY :",api_key)
 
     st.set_page_config(page_title="Dump PDFs to QDrant - Vector Store")
     st.title("Please upload your files...📁 ")
