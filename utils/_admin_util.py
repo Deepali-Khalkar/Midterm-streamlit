@@ -11,6 +11,9 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 import streamlit as st
+from langchain.prompts import ChatPromptTemplate
+from dotenv import load_dotenv
+
 
 
 
@@ -24,18 +27,8 @@ QUERY:
 Use the provide context to answer the provided user query. Only use the provided context to answer the query. If you do not know the answer, or it's not contained in the provided context response with "I don't know"
 """
 
-# Define the system prompt for categorization
-CATEGORY_PROMPT = """You are a ticket categorization system. Categorize the following query into exactly one of these categories:
-    - HR Support: For queries about employment, benefits, leaves, workplace policies, etc.
-    - IT Support: For queries about software, hardware, network, system access, etc.
-    - Transportation Support: For queries about company transport, parking, vehicle maintenance, etc.
-    - Other: For queries that do not fit into the above categories.
-    Respond with ONLY the category name, nothing else.
-    
-    Query: {query}
-    """
-
 def check_api_key():
+    load_dotenv()
     """Verify that the API key is set and valid"""
     api_key = os.getenv("OPENAI_API_KEY")
     if not api_key:
@@ -85,6 +78,7 @@ def create_embeddings():
         api_key = check_api_key()
         embedding_model = OpenAIEmbeddings(
             model="text-embedding-3-small",
+            openai_api_key=api_key
         )
         return embedding_model
     except Exception as e:
@@ -123,7 +117,7 @@ def create_vector_store(embedding_model, chunks):
         raise Exception(f"Error in vector store creation: {str(e)}")
 
 # create RAG
-def create_rag(vector_store):
+def create_rag():
     try:
         api_key = check_api_key()
         openai_chat_model = ChatOpenAI(
@@ -136,6 +130,10 @@ def create_rag(vector_store):
             ("system", "You are a helpful assistant that answers questions based on the provided context."),
             ("human", HUMAN_TEMPLATE)
         ])
+        if 'vector_store' in st.session_state:
+            vector_store = st.session_state.vector_store        
+        else:
+            raise ValueError("Vector store not found in session state")
         
         retriever = vector_store.as_retriever(search_kwargs={"k": 3})
         
@@ -151,9 +149,9 @@ def create_rag(vector_store):
         raise Exception(f"Error creating RAG chain: {str(e)}")
 
 # Invoke RAG
-def invoke_rag(vector_store, query):
+def invoke_rag(query):
     try:
-        rag_chain = create_rag(vector_store)
+        rag_chain = create_rag()
         response = rag_chain.invoke(query)
         return response
     except Exception as e:
@@ -184,4 +182,4 @@ def get_ticket_category(query):
         st.error(f"Error in category classification: {str(e)}")
         return "Other"  # Fallback category
 
-    
+

@@ -4,22 +4,6 @@ from utils._admin_util import create_embeddings, create_vector_store, read_pdf_d
 import streamlit as st
 from dotenv import load_dotenv
 
-def validate_api_key(api_key):
-    """Test if the API key is valid"""
-    try:
-       # Make a small test request to OpenAI
-        client = openai.OpenAI(api_key=api_key)
-        client.embeddings.create(input="test", model="text-embedding-ada-002")
-        return True
-    except openai.AuthenticationError:
-        st.error("❌ Invalid API key")
-        return False
-    except openai.PermissionDeniedError:
-        st.error("❌ Permission denied. Please check your API key's permissions")
-        return False
-    except Exception as e:
-        st.error(f"❌ API key validation error: {str(e)}")
-        return False
 
 def main():
     load_dotenv()
@@ -31,10 +15,6 @@ def main():
         st.info("To set up your API key:")
         st.code("1. Go to Hugging Face Space settings\n2. Add OPENAI_API_KEY in Repository Secrets")
         st.stop()
-    
-    # Validate the API key
-    # if not validate_api_key(api_key):
-    #     st.stop()
     
 
     st.set_page_config(page_title="Dump PDFs to QDrant - Vector Store")

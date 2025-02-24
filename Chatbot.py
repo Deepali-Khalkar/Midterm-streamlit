@@ -1,19 +1,33 @@
 from dotenv import load_dotenv
 import streamlit as st
-from utils._admin_util import invoke_rag, get_ticket_category
+#from utils._admin_util import invoke_rag, get_ticket_category
 import os
+
+from utils._admin_util import get_ticket_category, invoke_rag
+from utils._graph_util import run_customer_support
+
+#from utils._graph_util import create_agent_executor
 
 # Initialize categories in session state
 if "categories" not in st.session_state:
     st.session_state.categories = {
-        "HR Support": [],
-        "IT Support": [],
-        "Transportation Support": [],
+        "HR": [],
+        "IT": [],
+        "Transportation": [],
         "Other": []
     }
 
 def main():
     load_dotenv()
+    
+    # Add detailed API key verification
+    api_key = os.getenv("OPENAI_API_KEY")
+    if not api_key:
+        st.error("❌ OpenAI API key not found! Please ensure it's set in the environment variables.")
+        st.info("To set up your API key:")
+        st.code("1. Go to Hugging Face Space settings\n2. Add OPENAI_API_KEY in Repository Secrets")
+        st.stop()
+        
     
     # Page configuration
     st.set_page_config(
@@ -35,11 +49,6 @@ def main():
         - Other policies
         """)
         
-    # Set OpenAI API key
-    openai_api_key = os.getenv("OPENAI_API_KEY")
-    if not openai_api_key:
-        st.error("OpenAI API key not found! Please check your .env file.")
-        st.stop()
 
     # Main chat interface
     st.title("🤖 Intelligent Customer Support Agent")
@@ -56,14 +65,19 @@ def main():
             st.error("Please load the document data first!")
             st.stop()
         
-        response = invoke_rag(st.session_state.vector_store, prompt)
-        st.write(response)
-
+        # response = invoke_rag(st.session_state.vector_store, prompt)
+        # st.write(response)
+        
+        # response = create_agent_executor().invoke({"input": prompt})
+        # st.write(response)
+        
+        response = run_customer_support(prompt)
+        st.write(response.get("response"))
         #Button to create a ticket with respective department
         button = st.button("Submit ticket?")
         
         if button:
-            category = get_ticket_category(prompt)
+            category = response.get("category")
             st.session_state.categories[category].append(prompt)
             st.success("Ticket submitted successfully!")
             # Display category (optional)
