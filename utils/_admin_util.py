@@ -85,7 +85,6 @@ def create_embeddings():
         api_key = check_api_key()
         embedding_model = OpenAIEmbeddings(
             model="text-embedding-3-small",
-            openai_api_key=api_key
         )
         return embedding_model
     except Exception as e:
