@@ -1,5 +1,5 @@
 [project]
-name = "midterm"
+name = "midterm-streamlit"
 version = "0.1.0"
 description = "intelligent customer support chat"
 readme = "README.md"

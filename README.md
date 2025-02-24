@@ -1,12 +1,12 @@
 ---
-title: Midterm Streamlit
+title: Midterm-streamlit
 emoji: 🐢
 colorFrom: purple
-colorTo: yellow
+colorTo: red
 sdk: streamlit
-sdk_version: 1.42.2
-app_file: app.py
+app_file: Chatbot.py
 pinned: false
+short_description: Ticket classification tool and customer support agent
 ---
 
 Check out the configuration reference at https://huggingface.co/docs/hub/spaces-config-reference
