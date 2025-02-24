@@ -3,7 +3,7 @@ title: Midterm-streamlit
 emoji: 🐢
 colorFrom: purple
 colorTo: red
-sdk: docker
+sdk: streamlit
 app_file: Chatbot.py
 pinned: false
 short_description: Ticket classification tool and customer support agent
