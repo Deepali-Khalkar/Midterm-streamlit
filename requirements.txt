@@ -15,3 +15,4 @@ pymupdf
 langchain-core>=0.1.0
 qdrant-client>=1.7.0
 langchain-qdrant>=0.1.0
+httpx>=0.27.2
